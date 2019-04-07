@@ -119,29 +119,39 @@ class _AgendaState extends State<Agenda> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<AgendaContent>(
-      future: Networking().getAgenda(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          dates = content(snapshot.data);
-          agendaItems = agenda();
-          return ListView.builder(
-            itemBuilder: _buildAgendaItems,
-            itemCount: titles.length,
-          );
-        } else if (snapshot.hasError) {
-          return Text("error");
-        }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Agenda"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 4.0),
+        child: FutureBuilder<AgendaContent>(
+          future: Networking().getAgenda(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              dates = content(snapshot.data);
+              agendaItems = agenda();
+              return ListView.builder(
+                itemBuilder: _buildAgendaItems,
+                itemCount: titles.length,
+              );
+            } else if (snapshot.hasError) {
+              return Text("error");
+            }
 
-        return Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(),
-            ),
-          ],
-        );
-      },
+            return Center(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

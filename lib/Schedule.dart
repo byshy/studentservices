@@ -48,6 +48,7 @@ class Lecture {
   }
 }
 
+//TODO think of more efficient way to present this data
 class ScheduleItem extends StatelessWidget {
   Schedule s;
 
