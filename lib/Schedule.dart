@@ -58,7 +58,7 @@ class ScheduleItem extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: (){},
+          onTap: () {},
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
@@ -72,13 +72,14 @@ class ScheduleItem extends StatelessWidget {
       ),
     );
   }
+
   Widget buildSun(BuildContext context, int index) {
     return Container(
       color: Color.fromRGBO(240, 240, 240, 1),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: (){},
+          onTap: () {},
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
@@ -92,13 +93,14 @@ class ScheduleItem extends StatelessWidget {
       ),
     );
   }
+
   Widget buildMon(BuildContext context, int index) {
     return Container(
       color: Color.fromRGBO(240, 240, 240, 1),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: (){},
+          onTap: () {},
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
@@ -112,13 +114,14 @@ class ScheduleItem extends StatelessWidget {
       ),
     );
   }
+
   Widget buildTue(BuildContext context, int index) {
     return Container(
       color: Color.fromRGBO(240, 240, 240, 1),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: (){},
+          onTap: () {},
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
@@ -132,13 +135,14 @@ class ScheduleItem extends StatelessWidget {
       ),
     );
   }
+
   Widget buildWed(BuildContext context, int index) {
     return Container(
       color: Color.fromRGBO(240, 240, 240, 1),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: (){},
+          onTap: () {},
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
@@ -164,8 +168,7 @@ class ScheduleItem extends StatelessWidget {
               sun: snapshot.data.sun,
               mon: snapshot.data.mon,
               tue: snapshot.data.tue,
-              wed: snapshot.data.wed
-          );
+              wed: snapshot.data.wed);
 
           return SingleChildScrollView(
             child: Column(

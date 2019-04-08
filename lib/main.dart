@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studentservices/Agenda.dart';
 import 'package:studentservices/Schedule.dart';
+import 'package:studentservices/Student.dart';
 
 void main() => runApp(MyApp());
 
@@ -70,22 +71,30 @@ class HomeScreen extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
-                      child: Container(
-                        color: Colors.blue,
-                        width: 100.0,
-                        height: 100.0,
+                child: FlatButton(
+                  onPressed: () {
+                    Route info =
+                    MaterialPageRoute(builder: (context) => StudentListItem());
+                    Navigator.pop(context);
+                    Navigator.of(context).push(info);
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Container(
+                          color: Colors.blue,
+                          width: 100.0,
+                          height: 100.0,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text('Drawer Header'),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text('Drawer Header'),
+                      ),
+                    ],
+                  ),
                 ),
                 decoration: BoxDecoration(
                   color: Color(0xffdddddd),
@@ -95,7 +104,7 @@ class HomeScreen extends StatelessWidget {
                 title: Text('Agenda'),
                 onTap: () {
                   Route agenda =
-                  MaterialPageRoute(builder: (context) => Agenda());
+                      MaterialPageRoute(builder: (context) => Agenda());
                   Navigator.pop(context);
                   Navigator.of(context).push(agenda);
                 },
