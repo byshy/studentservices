@@ -151,16 +151,11 @@ class StudentListItem extends StatelessWidget {
           return Text("error");
         }
 
-        return Center(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          ),
-        );
+        // the widget have to return something while data
+        // being loaded, the studentTiles widget already returns a circular
+        // loading widget so this one will return nothing
+        return Container();
+
       },
     );
   }

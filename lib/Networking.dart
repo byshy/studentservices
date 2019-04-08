@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:studentservices/Agenda.dart';
+import 'package:studentservices/Installments.dart';
 import 'package:studentservices/Schedule.dart';
 import 'package:studentservices/Student.dart';
 
@@ -47,6 +48,18 @@ class Networking {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       return AcademicalInfo.fromJson(data["academical_data"]);
+    } else {
+      throw Exception('Failed to load academical info');
+    }
+  }
+
+  Future<Installments> getInstallments() async {
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+//      print(data["installments"]);
+      return Installments.fromJson(data);
     } else {
       throw Exception('Failed to load academical info');
     }

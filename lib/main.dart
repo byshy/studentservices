@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:studentservices/Agenda.dart';
+import 'package:studentservices/Installments.dart';
 import 'package:studentservices/Schedule.dart';
 import 'package:studentservices/Student.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(MyApp());
+
+_launchURL() async {
+  const url = 'https://idp.iugaza.edu.ps/idp/Authn/UserPassword';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -38,7 +49,9 @@ class HomeScreen extends StatelessWidget {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.language),
-              onPressed: () {},
+              onPressed: () {
+                _launchURL();
+              },
             ),
           ],
           bottom: TabBar(
@@ -110,10 +123,12 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: Text('Item 2'),
+                title: Text('Installments'),
                 onTap: () {
-                  // Update the state of the app
-                  // ...
+                  Route installments =
+                  MaterialPageRoute(builder: (context) => InstallmentsRoute());
+                  Navigator.pop(context);
+                  Navigator.of(context).push(installments);
                 },
               ),
               ListTile(
