@@ -36,14 +36,46 @@ class InstallmentsItem {
 class InstallmentsRoute extends StatelessWidget {
   Installments installments;
 
+  TextStyle style = TextStyle(fontSize: 15.0);
+
   Widget listTile(BuildContext context, int index){
-    return Column(
-      children: <Widget>[
-        Text(installments.items[index].dueDate),
-        Text(installments.items[index].amount.toString()),
-        Text(installments.items[index].payed.toString()),
-        Text((installments.items[index].amount - installments.items[index].payed).toString())
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Card(
+        elevation: 4.0,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(child: Text("dueDate", style: style)),
+                  Expanded(child: Text(installments.items[index].dueDate, style: style)),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(child: Text("amount", style: style)),
+                  Expanded(child: Text(installments.items[index].amount.toString(), style: style)),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(child: Text("payed", style: style)),
+                  Expanded(child: Text(installments.items[index].payed.toString(), style: style)),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(child: Text("remaining", style: style)),
+                  Expanded(child: Text((installments.items[index].amount - installments.items[index].payed).toString(), style: style))
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 
