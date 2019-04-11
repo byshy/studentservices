@@ -102,7 +102,7 @@ class StudentListItem extends StatelessWidget {
                 Divider(),
                 Row(
                   children: <Widget>[
-                    Expanded(child: Text("NAme", style: style)),
+                    Expanded(child: Text("Name", style: style)),
                     Expanded(child: Text(student.stdNameEng, style: style))
                   ],
                 ),
@@ -187,7 +187,7 @@ class StudentListItem extends StatelessWidget {
                 Divider(),
                 Row(
                   children: <Widget>[
-                    Expanded(child: Text("specialty", style: style)),
+                    Expanded(child: Text("Specialty", style: style)),
                     Expanded(child: Text(info.specialty, style: style))
                   ],
                 ),
@@ -195,28 +195,28 @@ class StudentListItem extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Expanded(
-                        child: Text("${info.lvl.toString()}", style: style)),
+                        child: Text("Level", style: style)),
                     Expanded(child: Text(info.lvl.toString(), style: style))
                   ],
                 ),
                 Divider(),
                 Row(
                   children: <Widget>[
-                    Expanded(child: Text("gpa", style: style)),
+                    Expanded(child: Text("GPA", style: style)),
                     Expanded(child: Text(info.gpa.toString(), style: style))
                   ],
                 ),
                 Divider(),
                 Row(
                   children: <Widget>[
-                    Expanded(child: Text("planNo", style: style)),
+                    Expanded(child: Text("Plan Number", style: style)),
                     Expanded(child: Text(info.planNo.toString(), style: style))
                   ],
                 ),
                 Divider(),
                 Row(
                   children: <Widget>[
-                    Expanded(child: Text("successHrs", style: style)),
+                    Expanded(child: Text("Success Hours", style: style)),
                     Expanded(
                         child: Text(info.successHrs.toString(), style: style))
                   ],
@@ -224,7 +224,7 @@ class StudentListItem extends StatelessWidget {
                 Divider(),
                 Row(
                   children: <Widget>[
-                    Expanded(child: Text("studyHrs", style: style)),
+                    Expanded(child: Text("Study Hours", style: style)),
                     Expanded(
                         child: Text(info.studyHrs.toString(), style: style))
                   ],
@@ -232,7 +232,7 @@ class StudentListItem extends StatelessWidget {
                 Divider(),
                 Row(
                   children: <Widget>[
-                    Expanded(child: Text("remainingHrs", style: style)),
+                    Expanded(child: Text("Remaining Hours", style: style)),
                     Expanded(
                         child: Text(info.remainingHrs.toString(), style: style))
                   ],
@@ -240,7 +240,7 @@ class StudentListItem extends StatelessWidget {
                 Divider(),
                 Row(
                   children: <Widget>[
-                    Expanded(child: Text("balance", style: style)),
+                    Expanded(child: Text("Balance", style: style)),
                     Expanded(child: Text(info.balance.toString(), style: style))
                   ],
                 )
@@ -272,47 +272,41 @@ class StudentListItem extends StatelessWidget {
         title: Text("Student Info"),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+        padding: const EdgeInsets.only(left: 8.0,right: 8.0, top: 4.0, bottom: 4.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Card(
-                    elevation: 4.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 12.0, right: 12.0, left: 12.0, bottom: 6.0),
-                          child: Text("Student Info",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20.0)),
-                        ),
-                        studentTiles(),
-                      ],
-                    )),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Card(
-                    elevation: 4.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 12.0, right: 12.0, left: 12.0, bottom: 6.0),
-                          child: Text("Academical Info",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20.0)),
-                        ),
-                        academicalTiles(),
-                      ],
-                    )),
-              )
+              Card(
+                  elevation: 4.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 12.0, right: 12.0, left: 12.0, bottom: 6.0),
+                        child: Text("Student Info",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20.0)),
+                      ),
+                      studentTiles(),
+                    ],
+                  )),
+              Card(
+                  elevation: 4.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 12.0, right: 12.0, left: 12.0, bottom: 6.0),
+                        child: Text("Academical Info",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20.0)),
+                      ),
+                      academicalTiles(),
+                    ],
+                  ))
             ],
           ),
         ),

@@ -9,7 +9,6 @@ class Installments {
 
   factory Installments.fromJson(Map<String,dynamic> json){
     var list = json['installments'] as List;
-    print(list.toString());
     List<InstallmentsItem> installmentsList = list.map((i) => InstallmentsItem.fromJson(i)).toList();
 
     return new Installments(
@@ -89,7 +88,6 @@ class InstallmentsRoute extends StatelessWidget {
         future: Networking().getInstallments(),
         builder: (context, snapshot){
           if (snapshot.hasData){
-            print(snapshot.data.items);
             installments = new Installments(
               items: snapshot.data.items
             );

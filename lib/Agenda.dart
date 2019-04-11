@@ -93,23 +93,20 @@ class _AgendaState extends State<Agenda> {
   }
 
   Widget _buildAgendaItems(BuildContext context, int index) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 3.0, left: 5.0, right: 5.0),
-      child: InkWell(
-        onTap: () {},
-        child: Padding(
-          padding: const EdgeInsets.only(
-              top: 10.0, bottom: 10.0, left: 8.0, right: 8.0),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                  child: Text(agendaItems[index].title,
-                      style: TextStyle(fontSize: 15.0))),
-              Expanded(
-                  child: Text(agendaItems[index].date,
-                      style: TextStyle(color: Colors.green, fontSize: 15.0)))
-            ],
-          ),
+    return InkWell(
+      onTap: () {},
+      child: Padding(
+        padding: const EdgeInsets.only(
+            top: 10.0, bottom: 10.0, left: 8.0, right: 8.0),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+                child: Text(agendaItems[index].title,
+                    style: TextStyle(fontSize: 15.0))),
+            Expanded(
+                child: Text(agendaItems[index].date,
+                    style: TextStyle(color: Colors.green, fontSize: 15.0)))
+          ],
         ),
       ),
     );
@@ -130,7 +127,7 @@ class _AgendaState extends State<Agenda> {
               dates = content(snapshot.data);
               agendaItems = agenda();
               return Padding(
-                padding: const EdgeInsets.only(top: 5.0),
+                padding: const EdgeInsets.only(top: 9.0),
                 child: ListView.separated(
                   separatorBuilder: (context, index) => Divider(),
                   itemBuilder: _buildAgendaItems,

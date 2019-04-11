@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:studentservices/Ads.dart';
 import 'package:studentservices/Agenda.dart';
 import 'package:studentservices/Installments.dart';
 import 'package:studentservices/Schedule.dart';
@@ -58,10 +59,20 @@ class Networking {
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-//      print(data["installments"]);
       return Installments.fromJson(data);
     } else {
-      throw Exception('Failed to load academical info');
+      throw Exception('Failed to load installments');
+    }
+  }
+
+  Future<AdsList> getAds() async {
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      return AdsList.fromJson(data);
+    } else {
+      throw Exception('Failed to load ads');
     }
   }
 

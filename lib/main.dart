@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studentservices/Ads.dart';
 import 'package:studentservices/Agenda.dart';
 import 'package:studentservices/Installments.dart';
 import 'package:studentservices/Schedule.dart';
@@ -86,8 +87,8 @@ class HomeScreen extends StatelessWidget {
               DrawerHeader(
                 child: FlatButton(
                   onPressed: () {
-                    Route info =
-                    MaterialPageRoute(builder: (context) => StudentListItem());
+                    Route info = MaterialPageRoute(
+                        builder: (context) => StudentListItem());
                     Navigator.pop(context);
                     Navigator.of(context).push(info);
                   },
@@ -125,10 +126,19 @@ class HomeScreen extends StatelessWidget {
               ListTile(
                 title: Text('Installments'),
                 onTap: () {
-                  Route installments =
-                  MaterialPageRoute(builder: (context) => InstallmentsRoute());
+                  Route installments = MaterialPageRoute(
+                      builder: (context) => InstallmentsRoute());
                   Navigator.pop(context);
                   Navigator.of(context).push(installments);
+                },
+              ),
+              ListTile(
+                title: Text('Ads'),
+                onTap: () {
+                  Route ads = MaterialPageRoute(
+                      builder: (context) => AdsRout());
+                  Navigator.pop(context);
+                  Navigator.of(context).push(ads);
                 },
               ),
               ListTile(
