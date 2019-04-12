@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:studentservices/Ads.dart';
 import 'package:studentservices/Agenda.dart';
 import 'package:studentservices/Installments.dart';
+import 'package:studentservices/Marks.dart';
 import 'package:studentservices/Schedule.dart';
 import 'package:studentservices/Student.dart';
 
@@ -71,6 +72,17 @@ class Networking {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       return AdsList.fromJson(data);
+    } else {
+      throw Exception('Failed to load ads');
+    }
+  }
+
+  Future<MarksList> getMarks() async {
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      return MarksList.fromJson(data);
     } else {
       throw Exception('Failed to load ads');
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studentservices/Ads.dart';
 import 'package:studentservices/Agenda.dart';
 import 'package:studentservices/Installments.dart';
+import 'package:studentservices/Marks.dart';
 import 'package:studentservices/Schedule.dart';
 import 'package:studentservices/Student.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -76,7 +77,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Container(),
             ScheduleItem(),
-            Container(),
+            MarksRoute(),
           ],
         ),
         drawer: Drawer(
