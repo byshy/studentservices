@@ -71,11 +71,6 @@ class DatabaseHelper {
 
   static Database _database;
 
-//  Database db() async{
-//    Database res = await instance.database;
-//    return res;
-//  };
-
   Future<Database> get database async {
     if (_database != null) return _database;
     _database = await _initDatabase();
@@ -166,7 +161,7 @@ class DatabaseHelper {
 
   Future<int> deleteAllAds() async {
     Database db = await instance.database;
-    return await db.delete(adsTable);
+    return await db.rawDelete("DELETE FROM $adsTable");
   }
 
   Future<int> queryAdsRowCount() async {
