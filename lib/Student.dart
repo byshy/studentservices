@@ -272,7 +272,7 @@ class StudentListItem extends StatelessWidget {
         title: Text("Student Info"),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 8.0,right: 8.0, top: 4.0, bottom: 4.0),
+        padding: const EdgeInsets.only(left: 8.0,right: 8.0, top: 4.0, bottom: 0.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -292,21 +292,24 @@ class StudentListItem extends StatelessWidget {
                       studentTiles(),
                     ],
                   )),
-              Card(
-                  elevation: 4.0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 12.0, right: 12.0, left: 12.0, bottom: 6.0),
-                        child: Text("Academical Info",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20.0)),
-                      ),
-                      academicalTiles(),
-                    ],
-                  ))
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4.0),
+                child: Card(
+                    elevation: 4.0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 12.0, right: 12.0, left: 12.0, bottom: 6.0),
+                          child: Text("Academical Info",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20.0)),
+                        ),
+                        academicalTiles(),
+                      ],
+                    )),
+              )
             ],
           ),
         ),
