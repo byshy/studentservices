@@ -79,7 +79,6 @@ class _AgendaState extends State<Agenda> {
   ];
 
   List<String> content(AgendaContent a) {
-    // list of content
     List<String> res = new List<String>();
 
     res.add(a.registrationStart);
