@@ -167,7 +167,7 @@ class _AgendaState extends State<Agenda> {
                 separatorBuilder: (context, index) => Divider(),
                 itemCount: titles.length),
           );
-        } else if (snapshot.data.length == 0) {
+        } else if (snapshot.data.length == 0 && !connectionStatus) {
           return Text("No data to be shown");
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
@@ -184,11 +184,8 @@ class _AgendaState extends State<Agenda> {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         res = true;
-        print("true");
       }
-    } on SocketException catch (_) {
-      print("false");
-    }
+    } on SocketException catch (_) {}
 
     setState(() {
       connectionStatus = res;
@@ -200,8 +197,7 @@ class _AgendaState extends State<Agenda> {
     Map<String, dynamic> row = {
       DatabaseHelper.agendaDateColumn: date
     };
-    final id = await dbHelper.insertAgenda(row);
-    print("inserted ${id}");
+    await dbHelper.insertAgenda(row);
   }
 
   Widget returnCircularLoader(){

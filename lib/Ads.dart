@@ -20,9 +20,8 @@ class AdsList {
 
   AdsList({this.list});
 
-  factory AdsList.fromJson(Map<String, dynamic> json) {
-    var list = json['ads'] as List;
-    List<Ads> adsList = list.map((i) => Ads.fromJson(i)).toList();
+  factory AdsList.fromJson(List<dynamic> json) {
+    List<Ads> adsList = json.map((i)=> Ads.fromJson(i)).toList();
 
     return new AdsList(list: adsList);
   }
@@ -34,10 +33,14 @@ class AdsRout extends StatefulWidget {
 }
 
 class _AdsRoutState extends State<AdsRout> {
-  List<Map<String, dynamic>> list;
-  AdsList adsList;
   final dbHelper = DatabaseHelper.instance;
-  bool connectionStatus = false; // to identify if there is network connection or not
+  bool connectionStatus = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkConnection();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,62 +48,40 @@ class _AdsRoutState extends State<AdsRout> {
       appBar: AppBar(
         title: Text("Ads"),
       ),
-      body: buildBody(),
+      body: getInterface(),
     );
   }
 
-  /// the following method would first check if there are data inside the database
-  /// if it's empty then a request will be sent to the api to load the data into
-  /// the database then display it, else if the database has data then show it immediately
-  // TODO make the app first check if there are internet access, if true then replace
-  // data inside the database with the newly fetched data, else display from the database
+  Widget getInterface() {
+    if(connectionStatus){
+      return FutureBuilder<AdsList>(
+        future: Networking().getAds(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            dbHelper.deleteAllAds();
 
-  Widget buildBody() {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: dbHelper.queryAllAdsRows(),
-      initialData: List(),
-      builder: (ctxt, databaseSnapshot) {
-        if (databaseSnapshot.data.length == 0) {
-          return FutureBuilder<AdsList>(
-              future: Networking().getAds(),
-              builder: (ctxt, snap) {
-                if (snap.hasData) {
-                  adsList =
-                  new AdsList(list: snap.data.list); // got data from api
+            for(int i = 0; i < snapshot.data.list.length; i++){
+              Ads item = snapshot.data.list[i];
+              _insert(item.address,item.dest);
+            }
 
-                  if (adsList.list.isEmpty) {
-                    return Text("no data to be shown");
-                  }
+            return _buildAdsItems();
 
-                  _delete();
+          } else if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
 
-                  for (int i = 0; i < adsList.list.length; i++) {
-                    _insert(adsList.list[i].address, adsList.list[i].dest);
-                  }
-
-                  return builtInterface();
-
-                } else if (snap.hasError) {
-                  return Text(snap.error.toString());
-                }
-
-                return returnCircularLoader();
-
-              });
-        } else if (databaseSnapshot.data.length != 0) {
-          return builtInterface();
-        } else if (databaseSnapshot.hasError) {
-          return Text(databaseSnapshot.error);
-        }
-
-        return returnCircularLoader();
-
-      },
-    );
+          return returnCircularLoader();
+        },
+      );
+    }
+    else {
+      return _buildAdsItems();
+    }
 
   }
 
-  Widget builtInterface() {
+  Widget _buildAdsItems() {
     return FutureBuilder<List>(
       future: dbHelper.queryAllAdsRows(),
       initialData: List(),
@@ -140,7 +121,7 @@ class _AdsRoutState extends State<AdsRout> {
               },
             ),
           );
-        } else if(snapshot.data.length == 0){
+        } else if(snapshot.data.length == 0 && !connectionStatus){
           return Text("no data to be shown");
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
@@ -150,6 +131,29 @@ class _AdsRoutState extends State<AdsRout> {
 
       },
     );
+  }
+
+  Future checkConnection() async {
+    bool res = false;
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        res = true;
+      }
+    } on SocketException catch (_) {}
+
+    setState(() {
+      connectionStatus = res;
+    });
+
+  }
+
+  void _insert(String address, String destination) async {
+    Map<String, dynamic> row = {
+      DatabaseHelper.adsAddressColumn: address,
+      DatabaseHelper.adsDestinationColumn: destination
+    };
+    await dbHelper.insertAds(row);
   }
 
   Widget returnCircularLoader(){
@@ -162,20 +166,6 @@ class _AdsRoutState extends State<AdsRout> {
         ),
       ),
     );
-  }
-
-  void _insert(String address, String destination) async {
-    Map<String, dynamic> row = {
-      DatabaseHelper.adsAddressColumn: address,
-      DatabaseHelper.adsDestinationColumn: destination
-    };
-    final id = await dbHelper.insertAds(row);
-    print("inserted ${id}");
-  }
-
-  void _delete() async {
-    final id = await dbHelper.deleteAllAds();
-    print("deleted ${id}");
   }
 
 }

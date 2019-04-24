@@ -190,4 +190,26 @@ class DatabaseHelper {
     return Sqflite.firstIntValue(
         await db.rawQuery('SELECT COUNT(*) FROM $agendaTable'));
   }
+
+  Future<int> insertInstallments(Map<String, dynamic> row) async {
+    Database db = await database;
+    return await db.insert(installmentsTable, row);
+  }
+
+  Future<List<Map<String, dynamic>>> queryAllInstallmentsRows() async {
+    Database db = await database;
+    return await db.query(installmentsTable);
+  }
+
+  Future<int> deleteAllInstallments() async {
+    Database db = await database;
+    return await db.rawDelete("DELETE FROM $installmentsTable");
+  }
+
+  Future<int> queryInstallmentsRowCount() async {
+    Database db = await database;
+    return Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $installmentsTable'));
+  }
+
 }

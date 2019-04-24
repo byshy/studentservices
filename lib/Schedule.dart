@@ -49,7 +49,12 @@ class Lecture {
 }
 
 //TODO think of more efficient way to present this data
-class ScheduleItem extends StatelessWidget {
+class ScheduleItem extends StatefulWidget {
+  @override
+  _ScheduleItemState createState() => _ScheduleItemState();
+}
+
+class _ScheduleItemState extends State<ScheduleItem> {
   Schedule s;
 
   Widget buildSat(BuildContext context, int index) {

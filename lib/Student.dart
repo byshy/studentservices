@@ -67,8 +67,14 @@ class AcademicalInfo {
   }
 }
 
-class StudentListItem extends StatelessWidget {
+class StudentListItem extends StatefulWidget {
+  @override
+  _StudentListItemState createState() => _StudentListItemState();
+}
+
+class _StudentListItemState extends State<StudentListItem> {
   StudentInfo student;
+
   AcademicalInfo info;
 
   TextStyle style = TextStyle(fontSize: 15.0);
