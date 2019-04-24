@@ -150,43 +150,43 @@ class DatabaseHelper {
   }
 
   Future<int> insertAds(Map<String, dynamic> row) async {
-    Database db = await instance.database;
+    Database db = await database;
     return await db.insert(adsTable, row);
   }
 
   Future<List<Map<String, dynamic>>> queryAllAdsRows() async {
-    Database db = await instance.database;
+    Database db = await database;
     return await db.query(adsTable);
   }
 
   Future<int> deleteAllAds() async {
-    Database db = await instance.database;
+    Database db = await database;
     return await db.rawDelete("DELETE FROM $adsTable");
   }
 
   Future<int> queryAdsRowCount() async {
-    Database db = await instance.database;
+    Database db = await database;
     return Sqflite.firstIntValue(
         await db.rawQuery('SELECT COUNT(*) FROM $adsTable'));
   }
 
   Future<int> insertAgenda(Map<String, dynamic> row) async {
-    Database db = await instance.database;
+    Database db = await database;
     return await db.insert(agendaTable, row);
   }
 
   Future<List<Map<String, dynamic>>> queryAllAgendaRows() async {
-    Database db = await instance.database;
+    Database db = await database;
     return await db.query(agendaTable);
   }
 
   Future<int> deleteAllAgenda() async {
-    Database db = await instance.database;
+    Database db = await database;
     return await db.rawDelete("DELETE FROM $agendaTable");
   }
 
   Future<int> queryAgendaRowCount() async {
-    Database db = await instance.database;
+    Database db = await database;
     return Sqflite.firstIntValue(
         await db.rawQuery('SELECT COUNT(*) FROM $agendaTable'));
   }
