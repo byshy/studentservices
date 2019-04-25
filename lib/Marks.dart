@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:studentservices/DataBase.dart';
 import 'package:studentservices/Networking.dart';
+import 'package:studentservices/Subjects.dart';
 
 class SubjectItem {
   final String name;
@@ -20,88 +24,229 @@ class SubjectItem {
   }
 }
 
+class SubjectsList {
+  List<SubjectItem> list = new List();
+
+  SubjectsList({this.list});
+
+  factory SubjectsList.fromJson(List<dynamic> json) {
+    List<SubjectItem> subjectsList =
+        json.map((i) => SubjectItem.fromJson(i)).toList();
+
+    return new SubjectsList(
+      list: subjectsList,
+    );
+  }
+}
+
 class MarkItem {
   final String year;
   final int semester;
   final double gpa;
   final double cGpa;
-  final List<SubjectItem> subjectsList;
+  final SubjectsList subjectsList;
 
   MarkItem({this.year, this.semester, this.gpa, this.cGpa, this.subjectsList});
 
   factory MarkItem.fromJson(Map<String, dynamic> json) {
-    var list = json["subjects"] as List;
-    List<SubjectItem> subjects = list.map((i) => SubjectItem.fromJson(i));
-
     return new MarkItem(
         year: json["year"],
         semester: json["semister"],
-        gpa: json["gpa"],
-        cGpa: json["cgpa"],
-        subjectsList: subjects);
+        gpa: json["gpa"].toDouble(),
+        cGpa: json["cgpa"].toDouble(),
+        subjectsList: SubjectsList.fromJson(json["subjects"]));
   }
 }
 
 class MarksList {
-  List<MarkItem> marks;
+  List<MarkItem> list;
 
-  MarksList({this.marks});
+  MarksList({this.list});
 
-  factory MarksList.fromJson(Map<String, dynamic> json) {
-    var list = json["marks"] as List;
-    List<MarkItem> marks = list.map((i) => MarkItem.fromJson(i));
+  factory MarksList.fromJson(List<dynamic> json) {
+    List<MarkItem> marks = json.map((i) => MarkItem.fromJson(i)).toList();
 
-    return new MarksList(marks: marks);
+    return new MarksList(list: marks);
   }
 }
 
-class MarksRoute extends StatelessWidget {
-  MarksList marks;
+class MarksRoute extends StatefulWidget {
+  @override
+  _MarksRouteState createState() => _MarksRouteState();
+}
 
-  Widget markTile(context, index) {
-    return Column(
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Text(marks.marks[index].year),
-            Text(marks.marks[index].semester.toString()),
-            Text(marks.marks[index].gpa.toString()),
-            Text(marks.marks[index].cGpa.toString()),
-            Text(marks.marks[index].subjectsList.toString())
-          ],
-        ),
-      ],
-    );
+class _MarksRouteState extends State<MarksRoute> {
+  MarksList marks;
+  final dbHelper = DatabaseHelper.instance;
+  bool connectionStatus = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkConnection();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<MarksList>(
-      future: Networking().getMarks(),
-      builder: (ctxt, snap) {
-        if (snap.hasData) {
-          marks = new MarksList(marks: snap.data.marks);
+    if (connectionStatus) {
+      return FutureBuilder<MarksList>(
+        future: Networking().getMarks(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            marks = new MarksList(list: snapshot.data.list);
 
-          return ListView.builder(
-            itemBuilder: markTile,
-            itemCount: marks.marks.length,
+            dbHelper.deleteAllMarks();
+
+            dbHelper.deleteAllSubjects();
+
+            for (int i = 0; i < snapshot.data.list.length; i++) {
+              MarkItem marks = snapshot.data.list[i];
+              SubjectsList item = marks.subjectsList;
+              _insertMarks(marks.year, marks.semester, marks.gpa, marks.cGpa)
+                  .then((int id) {
+                for (int j = 0; j < item.list.length; j++) {
+                  SubjectItem subject = item.list[j];
+                  _insertSubjects(id, subject.name, subject.code, subject.midEx,
+                      subject.finalEx, subject.credits);
+                }
+              });
+            }
+
+            return _buildMarksItems();
+
+          } else if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+
+          return returnCircularLoader();
+        },
+      );
+    } else {
+      return _buildMarksItems();
+    }
+  }
+
+  Widget _buildMarksItems() {
+    return FutureBuilder<List>(
+      future: dbHelper.queryAllMarksRows(),
+      initialData: List(),
+      builder: (context, snapshot) {
+        if (snapshot.data.length != 0) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, int position) {
+                final item = snapshot.data[position];
+                return Card(
+                  elevation: 2.0,
+                  child: InkWell(
+                    onTap: () {
+                      Route subjects =
+                          MaterialPageRoute(builder: (context) => Subjects());
+                      Navigator.of(context).push(subjects);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Text("Year"),
+                              ),
+                              Expanded(
+                                child: Text(item.row[1]),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Text("Semester"),
+                              ),
+                              Expanded(child: Text(item.row[2].toString()))
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Text("GPA"),
+                              ),
+                              Expanded(child: Text(item.row[3].toString())),
+                              Expanded(
+                                child: Text("CGPA"),
+                              ),
+                              Expanded(child: Text(item.row[4].toString()))
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
           );
-        } else if (snap.hasError) {
-          return Text(snap.error.toString());
+        } else if (snapshot.data.length == 0 && !connectionStatus) {
+          return Text("no data to be shown");
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
         }
 
-        return Center(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          ),
-        );
-
+        return returnCircularLoader();
       },
+    );
+  }
+
+  Future checkConnection() async {
+    bool res = false;
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        res = true;
+      }
+    } on SocketException catch (_) {}
+
+    setState(() {
+      connectionStatus = res;
+    });
+  }
+
+  Future<int> _insertMarks(
+      String year, int semester, double gpa, double cGpa) async {
+    Map<String, dynamic> row = {
+      DatabaseHelper.marksYearColumn: year,
+      DatabaseHelper.marksSemesterColumn: semester,
+      DatabaseHelper.marksGPAColumn: gpa,
+      DatabaseHelper.marksCGPAColumn: cGpa
+    };
+    int id = await dbHelper.insertMarks(row);
+    return id;
+  }
+
+  void _insertSubjects(int marksID, String name, String code, int mid,
+      int finalExam, int credits) async {
+    Map<String, dynamic> row = {
+      DatabaseHelper.subjectsMarksIDColumn: marksID,
+      DatabaseHelper.subjectsNameColumn: name,
+      DatabaseHelper.subjectsCodeColumn: code,
+      DatabaseHelper.subjectsMidColumn: mid,
+      DatabaseHelper.subjectsFinalColumn: finalExam,
+      DatabaseHelper.subjectsCreditsColumn: credits
+    };
+    await dbHelper.insertSubjects(row);
+  }
+
+  Widget returnCircularLoader() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[CircularProgressIndicator()],
+        ),
+      ),
     );
   }
 }

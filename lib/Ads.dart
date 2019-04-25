@@ -78,7 +78,6 @@ class _AdsRoutState extends State<AdsRout> {
     else {
       return _buildAdsItems();
     }
-
   }
 
   Widget _buildAdsItems() {

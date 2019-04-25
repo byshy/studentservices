@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 class DatabaseHelper {
 
   static final String _databaseName = "StudentServices.db";
-  static final int _databaseVersion = 5;
+  static final int _databaseVersion = 6;
 
   static final adsTable = 'ads_table';
   static final agendaTable = 'agenda_table';
@@ -36,7 +36,7 @@ class DatabaseHelper {
   static final marksCGPAColumn = 'marks_table_cgpa';
 
   static final subjectsIDColumn = 'subjects_table_id';
-  static final subjectsYearColumn = 'subjects_table_year';
+  static final subjectsMarksIDColumn = 'subjects_table_marks_id';
   static final subjectsNameColumn = 'subjects_table_name';
   static final subjectsCodeColumn = 'subjects_table_code';
   static final subjectsMidColumn = 'subjects_table_mid';
@@ -114,7 +114,7 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE $subjectsTable (
             $subjectsIDColumn INTEGER PRIMARY KEY AUTOINCREMENT,
-            $subjectsYearColumn TEXT NOT NULL,
+            $subjectsMarksIDColumn INTEGER NOT NULL,
             $subjectsNameColumn TEXT NOT NULL,
             $subjectsCodeColumn TEXT NOT NULL,
             $subjectsMidColumn INTEGER NOT NULL,
@@ -210,6 +210,48 @@ class DatabaseHelper {
     Database db = await database;
     return Sqflite.firstIntValue(
         await db.rawQuery('SELECT COUNT(*) FROM $installmentsTable'));
+  }
+
+  Future<int> insertMarks(Map<String, dynamic> row) async {
+    Database db = await database;
+    return await db.insert(marksTable, row);
+  }
+
+  Future<List<Map<String, dynamic>>> queryAllMarksRows() async {
+    Database db = await database;
+    return await db.query(marksTable);
+  }
+
+  Future<int> deleteAllMarks() async {
+    Database db = await database;
+    return await db.rawDelete("DELETE FROM $marksTable");
+  }
+
+  Future<int> queryMarksRowCount() async {
+    Database db = await database;
+    return Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $marksTable'));
+  }
+
+  Future<int> insertSubjects(Map<String, dynamic> row) async {
+    Database db = await database;
+    return await db.insert(subjectsTable, row);
+  }
+
+  Future<List<Map<String, dynamic>>> queryAllSubjectsRows() async {
+    Database db = await database;
+    return await db.query(subjectsTable);
+  }
+
+  Future<int> deleteAllSubjects() async {
+    Database db = await database;
+    return await db.rawDelete("DELETE FROM $subjectsTable");
+  }
+
+  Future<int> querySubjectsRowCount() async {
+    Database db = await database;
+    return Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $subjectsTable'));
   }
 
 }
