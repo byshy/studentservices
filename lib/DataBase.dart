@@ -5,9 +5,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper {
-
   static final String _databaseName = "StudentServices.db";
-  static final int _databaseVersion = 6;
+  static final int _databaseVersion = 9;
 
   static final adsTable = 'ads_table';
   static final agendaTable = 'agenda_table';
@@ -16,6 +15,7 @@ class DatabaseHelper {
   static final subjectsTable = 'subjects_table';
   static final scheduleTable = 'schedule_table';
   static final studentTable = 'student_table';
+  static final academicalTable = 'academical_table';
 
   static final adsIDColumn = 'ads_table_id';
   static final adsAddressColumn = 'ads_table_address';
@@ -35,7 +35,7 @@ class DatabaseHelper {
   static final marksGPAColumn = 'marks_table_gpa';
   static final marksCGPAColumn = 'marks_table_cgpa';
 
-  static final subjectsIDColumn = 'subjects_table_id';
+//  static final subjectsIDColumn = 'subjects_table_id';
   static final subjectsMarksIDColumn = 'subjects_table_marks_id';
   static final subjectsNameColumn = 'subjects_table_name';
   static final subjectsCodeColumn = 'subjects_table_code';
@@ -55,15 +55,16 @@ class DatabaseHelper {
   static final studentNameEngColumn = 'student_table_name_eng';
   static final studentNameArColumn = 'student_table_name_ar';
   static final studentAddressColumn = 'student_table_address';
-  static final studentCollegeColumn = 'student_table_college';
-  static final studentGPAColumn = 'student_table_gpa';
-  static final studentSpecialtyColumn = 'student_table_specialty';
-  static final studentLvlColumn = 'student_table_lvl';
-  static final studentPlanNoColumn = 'student_table_plan_no';
-  static final studentSuccessHrsColumn = 'student_table_success_hrs';
-  static final studentStudyHrsColumn = 'student_table_study_hrs';
-  static final studentRemainingHrsColumn = 'student_table_remaining_hrs';
-  static final studentBalanceColumn = 'student_table_balance';
+
+  static final academicalCollegeColumn = 'academical_table_college';
+  static final academicalGPAColumn = 'academical_table_gpa';
+  static final academicalSpecialtyColumn = 'academical_table_specialty';
+  static final academicalLvlColumn = 'academical_table_lvl';
+  static final academicalPlanNoColumn = 'academical_table_plan_no';
+  static final academicalSuccessHrsColumn = 'academical_table_success_hrs';
+  static final academicalStudyHrsColumn = 'academical_table_study_hrs';
+  static final academicalRemainingHrsColumn = 'academical_table_remaining_hrs';
+  static final academicalBalanceColumn = 'academical_table_balance';
 
   DatabaseHelper._privateConstructor();
 
@@ -87,25 +88,25 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     await db.execute('''
           CREATE TABLE $adsTable (
-            $adsIDColumn INTEGER PRIMARY KEY AUTOINCREMENT,
+            $adsIDColumn INTEGER PRIMARY KEY,
             $adsAddressColumn TEXT NOT NULL,
             $adsDestinationColumn TEXT NOT NULL
           );''');
     await db.execute('''
           CREATE TABLE $agendaTable (
-            $agendaIDColumn INTEGER PRIMARY KEY AUTOINCREMENT,
+            $agendaIDColumn INTEGER PRIMARY KEY,
             $agendaDateColumn TEXT NOT NULL
           );''');
     await db.execute('''
           CREATE TABLE $installmentsTable (
-            $installmentsIDColumn INTEGER PRIMARY KEY AUTOINCREMENT,
+            $installmentsIDColumn INTEGER PRIMARY KEY,
             $installmentsDueDateColumn TEXT NOT NULL,
             $installmentsAmountColumn INTEGER NOT NULL,
             $installmentsPayedColumn INTEGER NOT NULL
           );''');
     await db.execute('''
           CREATE TABLE $marksTable (
-            $marksIDColumn INTEGER PRIMARY KEY AUTOINCREMENT,
+            $marksIDColumn INTEGER PRIMARY KEY,
             $marksYearColumn TEXT NOT NULL,
             $marksSemesterColumn INTEGER NOT NULL,
             $marksGPAColumn REAL NOT NULL,
@@ -113,7 +114,6 @@ class DatabaseHelper {
           );''');
     await db.execute('''
           CREATE TABLE $subjectsTable (
-            $subjectsIDColumn INTEGER PRIMARY KEY AUTOINCREMENT,
             $subjectsMarksIDColumn INTEGER NOT NULL,
             $subjectsNameColumn TEXT NOT NULL,
             $subjectsCodeColumn TEXT NOT NULL,
@@ -131,21 +131,24 @@ class DatabaseHelper {
           );''');
     await db.execute('''
           CREATE TABLE $studentTable (
-            $studentNumberColumn INTEGER PRIMARY KEY AUTOINCREMENT,
+            $studentNumberColumn INTEGER PRIMARY KEY,
             $studentDoBColumn TEXT NOT NULL,
             $studentPoBColumn TEXT NOT NULL,
             $studentNameEngColumn TEXT NOT NULL,
             $studentNameArColumn TEXT NOT NULL,
-            $studentAddressColumn TEXT NOT NULL,
-            $studentCollegeColumn TEXT NOT NULL,
-            $studentGPAColumn REAL NOT NULL,
-            $studentSpecialtyColumn TEXT NOT NULL,
-            $studentLvlColumn INTEGER NOT NULL,
-            $studentPlanNoColumn INTEGER NOT NULL,
-            $studentSuccessHrsColumn INTEGER NOT NULL,
-            $studentStudyHrsColumn INTEGER NOT NULL,
-            $studentRemainingHrsColumn INTEGER NOT NULL,
-            $studentBalanceColumn REAL NOT NULL
+            $studentAddressColumn TEXT NOT NULL
+          );''');
+    await db.execute('''
+          CREATE TABLE $academicalTable (
+            $academicalCollegeColumn TEXT NOT NULL,
+            $academicalGPAColumn REAL NOT NULL,
+            $academicalSpecialtyColumn TEXT NOT NULL,
+            $academicalLvlColumn INTEGER NOT NULL,
+            $academicalPlanNoColumn INTEGER NOT NULL,
+            $academicalSuccessHrsColumn INTEGER NOT NULL,
+            $academicalStudyHrsColumn INTEGER NOT NULL,
+            $academicalRemainingHrsColumn INTEGER NOT NULL,
+            $academicalBalanceColumn REAL NOT NULL
           );''');
   }
 
@@ -254,4 +257,45 @@ class DatabaseHelper {
         await db.rawQuery('SELECT COUNT(*) FROM $subjectsTable'));
   }
 
+  Future<int> insertStudentInfo(Map<String, dynamic> row) async {
+    Database db = await database;
+    return await db.insert(studentTable, row);
+  }
+
+  Future<List<Map<String, dynamic>>> queryAllStudentInfoRows() async {
+    Database db = await database;
+    return await db.query(studentTable);
+  }
+
+  Future<int> deleteAllStudentInfo() async {
+    Database db = await database;
+    return await db.rawDelete("DELETE FROM $studentTable");
+  }
+
+  Future<int> queryStudentInfoRowCount() async {
+    Database db = await database;
+    return Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $studentTable'));
+  }
+
+  Future<int> insertAcademicalInfo(Map<String, dynamic> row) async {
+    Database db = await database;
+    return await db.insert(academicalTable, row);
+  }
+
+  Future<List<Map<String, dynamic>>> queryAllAcademicalInfoRows() async {
+    Database db = await database;
+    return await db.query(academicalTable);
+  }
+
+  Future<int> deleteAllAcademicalInfo() async {
+    Database db = await database;
+    return await db.rawDelete("DELETE FROM $academicalTable");
+  }
+
+  Future<int> queryAcademicalInfoRowCount() async {
+    Database db = await database;
+    return Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $academicalTable'));
+  }
 }

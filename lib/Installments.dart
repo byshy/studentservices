@@ -70,7 +70,7 @@ class _InstallmentsRouteState extends State<InstallmentsRoute> {
 
             for (int i = 0; i < snapshot.data.list.length; i++) {
               InstallmentsItem item = snapshot.data.list[i];
-              _insert(item.dueDate, item.amount, item.payed);
+              _insert(i, item.dueDate, item.amount, item.payed);
             }
 
             return _buildInstallmentsItems();
@@ -171,8 +171,9 @@ class _InstallmentsRouteState extends State<InstallmentsRoute> {
     });
   }
 
-  void _insert(String dueDate, int amount, int payed) async {
+  void _insert(int id, String dueDate, int amount, int payed) async {
     Map<String, dynamic> row = {
+      DatabaseHelper.installmentsIDColumn: id,
       DatabaseHelper.installmentsDueDateColumn: dueDate,
       DatabaseHelper.installmentsAmountColumn: amount,
       DatabaseHelper.installmentsPayedColumn: payed

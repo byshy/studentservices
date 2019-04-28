@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:studentservices/DataBase.dart';
 import 'package:studentservices/Networking.dart';
 
 class StudentInfo {
@@ -7,7 +10,7 @@ class StudentInfo {
   final String stdDOB; // Date of birth
   final String stdPOB; // Place of birth
   final String stdNameEng;
-  final String stdNameAra;
+  final String stdNameAr;
   final String stdAddress;
 
   StudentInfo(
@@ -15,7 +18,7 @@ class StudentInfo {
       this.stdDOB,
       this.stdPOB,
       this.stdNameEng,
-      this.stdNameAra,
+      this.stdNameAr,
       this.stdAddress});
 
   factory StudentInfo.fromJson(Map<String, dynamic> json) {
@@ -24,11 +27,11 @@ class StudentInfo {
       stdDOB: json["dob"],
       stdPOB: json["pob"],
       stdNameEng: json["name_eng"],
-      stdNameAra: json["name_ara"],
+      stdNameAr: json["name_ara"],
       stdAddress: json["address"],
     );
   }
-}
+} //PODO
 
 class AcademicalInfo {
   final String college;
@@ -65,7 +68,7 @@ class AcademicalInfo {
       balance: json["balance"],
     );
   }
-}
+} //PODO
 
 class StudentListItem extends StatefulWidget {
   @override
@@ -74,212 +77,25 @@ class StudentListItem extends StatefulWidget {
 
 class _StudentListItemState extends State<StudentListItem> {
   StudentInfo student;
-
   AcademicalInfo info;
+  final dbHelper = DatabaseHelper.instance;
+  bool connectionStatus = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkConnection();
+  }
 
   TextStyle style = TextStyle(fontSize: 15.0);
-
-  Widget studentTiles() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12.0, 0, 12.0, 12.0),
-      child: FutureBuilder<StudentInfo>(
-        future: Networking().getStudentInfo(),
-        builder: (context, snapshot) {
-          print("received ${snapshot.data}");
-          if (snapshot.hasData) {
-            student = new StudentInfo(
-                stdNameAra: snapshot.data.stdNameAra,
-                stdNameEng: snapshot.data.stdNameEng,
-                stdNum: snapshot.data.stdNum,
-                stdDOB: snapshot.data.stdDOB,
-                stdPOB: snapshot.data.stdPOB,
-                stdAddress: snapshot.data.stdAddress);
-
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("Name (Arabic)", style: style)),
-                    Expanded(child: Text(student.stdNameAra, style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("Name", style: style)),
-                    Expanded(child: Text(student.stdNameEng, style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("Std. ID.", style: style)),
-                    Expanded(
-                        child: Text(student.stdNum.toString(), style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("Date of Birth", style: style)),
-                    Expanded(child: Text(student.stdDOB, style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("Place of Birth", style: style)),
-                    Expanded(child: Text(student.stdPOB, style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("Address", style: style)),
-                    Expanded(child: Text(student.stdAddress, style: style))
-                  ],
-                ),
-              ],
-            );
-          } else if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-
-          return Center(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget academicalTiles() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12.0, 0, 12.0, 12.0),
-      child: FutureBuilder<AcademicalInfo>(
-        future: Networking().getAcademicalInfo(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            info = new AcademicalInfo(
-                college: snapshot.data.college,
-                specialty: snapshot.data.specialty,
-                lvl: snapshot.data.lvl,
-                gpa: snapshot.data.gpa,
-                planNo: snapshot.data.planNo,
-                successHrs: snapshot.data.successHrs,
-                studyHrs: snapshot.data.studyHrs,
-                remainingHrs: snapshot.data.remainingHrs,
-                balance: snapshot.data.balance);
-
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("College", style: style)),
-                    Expanded(child: Text(info.college, style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("Specialty", style: style)),
-                    Expanded(child: Text(info.specialty, style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: Text("Level", style: style)),
-                    Expanded(child: Text(info.lvl.toString(), style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("GPA", style: style)),
-                    Expanded(child: Text(info.gpa.toString(), style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("Plan Number", style: style)),
-                    Expanded(child: Text(info.planNo.toString(), style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("Success Hours", style: style)),
-                    Expanded(
-                        child: Text(info.successHrs.toString(), style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("Study Hours", style: style)),
-                    Expanded(
-                        child: Text(info.studyHrs.toString(), style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("Remaining Hours", style: style)),
-                    Expanded(
-                        child: Text(info.remainingHrs.toString(), style: style))
-                  ],
-                ),
-                Divider(),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text("Balance", style: style)),
-                    Expanded(child: Text(info.balance.toString(), style: style))
-                  ],
-                )
-              ],
-            );
-          } else if (snapshot.hasError) {
-            return Text("error");
-          }
-
-          return Center(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Student Info"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 8.0,right: 8.0, top: 4.0, bottom: 0.0),
-        child: SingleChildScrollView(
+        appBar: AppBar(
+          title: Text("Student Info"),
+        ),
+        body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -295,7 +111,7 @@ class _StudentListItemState extends State<StudentListItem> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20.0)),
                       ),
-                      studentTiles(),
+                      getStudentInfoInterface(),
                     ],
                   )),
               Padding(
@@ -312,31 +128,309 @@ class _StudentListItemState extends State<StudentListItem> {
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 20.0)),
                         ),
-                        academicalTiles(),
+                        getAcademicalInfoInterface(),
                       ],
                     )),
               )
             ],
           ),
+        )
+//      Padding(
+//        padding:
+//            const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0, bottom: 0.0),
+//        child: Column(
+//          children: <Widget>[
+//            getStudentInfoInterface(),
+//            getAcademicalInfoInterface()
+//          ],
+//        ),
+//      ),
+        );
+  }
+
+  Widget getStudentInfoInterface() {
+    if (connectionStatus) {
+      return FutureBuilder<StudentInfo>(
+        future: Networking().getStudentInfo(),
+        builder: (context, snapshot) {
+          print("received ${snapshot.data}");
+          if (snapshot.hasData) {
+            student = snapshot.data;
+
+            dbHelper.deleteAllStudentInfo();
+
+            _insertStudentInfo(student.stdNum, student.stdDOB, student.stdPOB,
+                student.stdNameEng, student.stdNameAr, student.stdAddress);
+
+            return _buildStudentItem();
+          } else if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+
+          return returnCircularLoader();
+        },
+      );
+    } else {
+      return _buildStudentItem();
+    }
+  }
+
+  Widget _buildStudentItem() {
+    return FutureBuilder<List>(
+      initialData: List(),
+      future: dbHelper.queryAllStudentInfoRows(),
+      builder: (context, snapshot) {
+        if (snapshot.data.length != 0) {
+          final item = snapshot.data[0];
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(12.0, 0, 12.0, 12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Name (Arabic)", style: style)),
+                    Expanded(child: Text(item.row[4], style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Name", style: style)),
+                    Expanded(child: Text(item.row[3], style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Std. ID.", style: style)),
+                    Expanded(
+                        child: Text(item.row[0].toString(),
+                            style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Date of Birth", style: style)),
+                    Expanded(child: Text(item.row[1], style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Place of Birth", style: style)),
+                    Expanded(child: Text(item.row[2], style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Address", style: style)),
+                    Expanded(child: Text(item.row[5], style: style))
+                  ],
+                ),
+              ],
+            ),
+          );
+        } else if (snapshot.data.length == 0 && !connectionStatus) {
+          return Text("No data to be shown");
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+
+        return returnCircularLoader();
+      },
+    );
+  }
+
+  Widget getAcademicalInfoInterface() {
+    if (connectionStatus) {
+      return FutureBuilder<AcademicalInfo>(
+        future: Networking().getAcademicalInfo(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            info = snapshot.data;
+
+            dbHelper.deleteAllAcademicalInfo();
+
+            _insertAcademicalInfo(
+                info.college,
+                info.gpa,
+                info.specialty,
+                info.lvl,
+                info.planNo,
+                info.successHrs,
+                info.studyHrs,
+                info.remainingHrs,
+                info.balance);
+
+            return _buildAcademicalTiles();
+          } else if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+
+          return returnCircularLoader();
+        },
+      );
+    } else {
+      return _buildAcademicalTiles();
+    }
+  }
+
+  Widget _buildAcademicalTiles() {
+    return FutureBuilder<List>(
+      initialData: List(),
+      future: dbHelper.queryAllAcademicalInfoRows(),
+      builder: (context, snapshot) {
+        if (snapshot.data.length != 0) {
+          final item = snapshot.data[0];
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(12.0, 0, 12.0, 12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("College", style: style)),
+                    Expanded(child: Text(item.row[0], style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Specialty", style: style)),
+                    Expanded(child: Text(item.row[2], style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Level", style: style)),
+                    Expanded(child: Text(item.row[3].toString(), style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("GPA", style: style)),
+                    Expanded(child: Text(item.row[1].toString(), style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Plan Number", style: style)),
+                    Expanded(child: Text(item.row[4].toString(), style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Success Hours", style: style)),
+                    Expanded(
+                        child: Text(item.row[5].toString(), style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Study Hours", style: style)),
+                    Expanded(
+                        child: Text(item.row[6].toString(), style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Remaining Hours", style: style)),
+                    Expanded(
+                        child: Text(item.row[7].toString(), style: style))
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text("Balance", style: style)),
+                    Expanded(child: Text(item.row[8].toString(), style: style))
+                  ],
+                )
+              ],
+            ),
+          );
+        } else if (snapshot.data.length == 0 && !connectionStatus) {
+          return Text("No data to be shown");
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+
+        return returnCircularLoader();
+      },
+    );
+  }
+
+  Future checkConnection() async {
+    bool res = false;
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        res = true;
+      }
+    } on SocketException catch (_) {}
+
+    setState(() {
+      connectionStatus = res;
+    });
+  }
+
+  void _insertStudentInfo(int number, String dob, String pob, String nameEng,
+      String nameAr, String address) async {
+    Map<String, dynamic> row = {
+      DatabaseHelper.studentNumberColumn: number,
+      DatabaseHelper.studentDoBColumn: dob,
+      DatabaseHelper.studentPoBColumn: pob,
+      DatabaseHelper.studentNameEngColumn: nameEng,
+      DatabaseHelper.studentNameArColumn: nameAr,
+      DatabaseHelper.studentAddressColumn: address,
+    };
+    await dbHelper.insertStudentInfo(row);
+  }
+
+  void _insertAcademicalInfo(
+      String college,
+      double gpa,
+      String specialty,
+      int lvl,
+      int planNo,
+      int succHrs,
+      int studHrs,
+      int remHrs,
+      double balance) async {
+    Map<String, dynamic> row = {
+      DatabaseHelper.academicalCollegeColumn: college,
+      DatabaseHelper.academicalGPAColumn: gpa,
+      DatabaseHelper.academicalSpecialtyColumn: specialty,
+      DatabaseHelper.academicalLvlColumn: lvl,
+      DatabaseHelper.academicalPlanNoColumn: planNo,
+      DatabaseHelper.academicalSuccessHrsColumn: succHrs,
+      DatabaseHelper.academicalStudyHrsColumn: studHrs,
+      DatabaseHelper.academicalRemainingHrsColumn: remHrs,
+      DatabaseHelper.academicalBalanceColumn: balance,
+    };
+    await dbHelper.insertAcademicalInfo(row);
+  }
+
+  Widget returnCircularLoader() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[CircularProgressIndicator()],
         ),
       ),
     );
   }
 }
-
-//TODO: support for multiple accounts
-//
-//class StudentList {
-//  final List<Student> students;
-//
-//  StudentList({this.students});
-//
-//  factory StudentList.fromJson(List<dynamic> parsedJson) {
-//    List<Student> studentsList =
-//        parsedJson.map((i) => Student.fromJson(i)).toList();
-//
-//    return new StudentList(
-//      students: studentsList,
-//    );
-//  }
-//}

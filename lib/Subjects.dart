@@ -34,7 +34,7 @@ class _SubjectsState extends State<Subjects> {
                               child: Text("name"),
                             ),
                             Expanded(
-                              child: Text(item.row[2]),
+                              child: Text(item.row[1]),
                             )
                           ],
                         ),
@@ -44,7 +44,7 @@ class _SubjectsState extends State<Subjects> {
                               child: Text("code"),
                             ),
                             Expanded(
-                              child: Text(item.row[3]),
+                              child: Text(item.row[2]),
                             )
                           ],
                         ),
@@ -54,7 +54,7 @@ class _SubjectsState extends State<Subjects> {
                               child: Text("mid exam"),
                             ),
                             Expanded(
-                              child: Text(item.row[4].toString()),
+                              child: Text(item.row[3].toString()),
                             )
                           ],
                         ),
@@ -64,7 +64,7 @@ class _SubjectsState extends State<Subjects> {
                               child: Text("final exam"),
                             ),
                             Expanded(
-                              child: Text(item.row[5].toString()),
+                              child: Text(item.row[4].toString()),
                             )
                           ],
                         ),
@@ -74,7 +74,7 @@ class _SubjectsState extends State<Subjects> {
                               child: Text("credits"),
                             ),
                             Expanded(
-                              child: Text(item.row[6].toString()),
+                              child: Text(item.row[5].toString()),
                             )
                           ],
                         )

@@ -115,12 +115,11 @@ class _AgendaState extends State<Agenda> {
 
             dbHelper.deleteAllAgenda();
 
-            for(int i = 0; i < titles.length; i++){
-              _insert(dates[i]);
+            for (int i = 0; i < titles.length; i++) {
+              _insert(i, dates[i]);
             }
 
             return _buildAgendaItems();
-
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
@@ -190,17 +189,17 @@ class _AgendaState extends State<Agenda> {
     setState(() {
       connectionStatus = res;
     });
-
   }
 
-  void _insert(String date) async {
+  void _insert(int id, String date) async {
     Map<String, dynamic> row = {
+      DatabaseHelper.agendaIDColumn: id,
       DatabaseHelper.agendaDateColumn: date
     };
     await dbHelper.insertAgenda(row);
   }
 
-  Widget returnCircularLoader(){
+  Widget returnCircularLoader() {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -211,5 +210,4 @@ class _AgendaState extends State<Agenda> {
       ),
     );
   }
-
 }

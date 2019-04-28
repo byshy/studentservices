@@ -102,7 +102,7 @@ class _MarksRouteState extends State<MarksRoute> {
             for (int i = 0; i < snapshot.data.list.length; i++) {
               MarkItem marks = snapshot.data.list[i];
               SubjectsList item = marks.subjectsList;
-              _insertMarks(marks.year, marks.semester, marks.gpa, marks.cGpa)
+              _insertMarks(i, marks.year, marks.semester, marks.gpa, marks.cGpa)
                   .then((int id) {
                 for (int j = 0; j < item.list.length; j++) {
                   SubjectItem subject = item.list[j];
@@ -213,16 +213,17 @@ class _MarksRouteState extends State<MarksRoute> {
     });
   }
 
-  Future<int> _insertMarks(
+  Future<int> _insertMarks(int id,
       String year, int semester, double gpa, double cGpa) async {
     Map<String, dynamic> row = {
+      DatabaseHelper.marksIDColumn: id,
       DatabaseHelper.marksYearColumn: year,
       DatabaseHelper.marksSemesterColumn: semester,
       DatabaseHelper.marksGPAColumn: gpa,
       DatabaseHelper.marksCGPAColumn: cGpa
     };
-    int id = await dbHelper.insertMarks(row);
-    return id;
+    int getId = await dbHelper.insertMarks(row);
+    return getId;
   }
 
   void _insertSubjects(int marksID, String name, String code, int mid,

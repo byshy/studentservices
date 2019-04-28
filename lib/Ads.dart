@@ -62,7 +62,7 @@ class _AdsRoutState extends State<AdsRout> {
 
             for(int i = 0; i < snapshot.data.list.length; i++){
               Ads item = snapshot.data.list[i];
-              _insert(item.address,item.dest);
+              _insert(i,item.address,item.dest);
             }
 
             return _buildAdsItems();
@@ -147,12 +147,14 @@ class _AdsRoutState extends State<AdsRout> {
 
   }
 
-  void _insert(String address, String destination) async {
+  void _insert(int id, String address, String destination) async {
     Map<String, dynamic> row = {
+      DatabaseHelper.adsIDColumn: id,
       DatabaseHelper.adsAddressColumn: address,
       DatabaseHelper.adsDestinationColumn: destination
     };
-    await dbHelper.insertAds(row);
+    int result = await dbHelper.insertAds(row);
+    print("inserted $result");
   }
 
   Widget returnCircularLoader(){
