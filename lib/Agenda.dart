@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studentservices/DataBase.dart';
@@ -48,12 +47,12 @@ class AgendaItem {
   AgendaItem(this.title, this.date);
 } //PODO
 
-class Agenda extends StatefulWidget {
+class AgendaRoute extends StatefulWidget {
   @override
-  _AgendaState createState() => _AgendaState();
+  _AgendaRouteState createState() => _AgendaRouteState();
 }
 
-class _AgendaState extends State<Agenda> {
+class _AgendaRouteState extends State<AgendaRoute> {
   List<String> dates;
   List<AgendaItem> agendaItems;
   final dbHelper = DatabaseHelper.instance;

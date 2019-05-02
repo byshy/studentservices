@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studentservices/Ads.dart';
 import 'package:studentservices/Agenda.dart';
+import 'package:studentservices/Exams.dart';
 import 'package:studentservices/Installments.dart';
 import 'package:studentservices/Marks.dart';
 import 'package:studentservices/Schedule.dart';
@@ -75,8 +76,8 @@ class HomeScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            Container(),
-            ScheduleItem(),
+            ExamsRoute(),
+            ScheduleRoute(),
             MarksRoute(),
           ],
         ),
@@ -89,7 +90,7 @@ class HomeScreen extends StatelessWidget {
                 child: FlatButton(
                   onPressed: () {
                     Route info = MaterialPageRoute(
-                        builder: (context) => StudentListItem());
+                        builder: (context) => StudentRoute());
                     Navigator.pop(context);
                     Navigator.of(context).push(info);
                   },
@@ -119,7 +120,7 @@ class HomeScreen extends StatelessWidget {
                 title: Text('Agenda'),
                 onTap: () {
                   Route agenda =
-                      MaterialPageRoute(builder: (context) => Agenda());
+                      MaterialPageRoute(builder: (context) => AgendaRoute());
                   Navigator.pop(context);
                   Navigator.of(context).push(agenda);
                 },
@@ -137,7 +138,7 @@ class HomeScreen extends StatelessWidget {
                 title: Text('Ads'),
                 onTap: () {
                   Route ads = MaterialPageRoute(
-                      builder: (context) => AdsRout());
+                      builder: (context) => AdsRoute());
                   Navigator.pop(context);
                   Navigator.of(context).push(ads);
                 },

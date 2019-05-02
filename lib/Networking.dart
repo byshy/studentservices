@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:studentservices/Ads.dart';
 import 'package:studentservices/Agenda.dart';
+import 'package:studentservices/Exams.dart';
 import 'package:studentservices/Installments.dart';
 import 'package:studentservices/Marks.dart';
 import 'package:studentservices/Schedule.dart';
@@ -85,6 +86,28 @@ class Networking {
       return MarksList.fromJson(data);
     } else {
       throw Exception('Failed to load marks');
+    }
+  }
+
+  Future<String> getStudyPlan() async {
+    final response = await http.get("${url}study_plan");
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      return data;
+    } else {
+      throw Exception('Failed to load study plan');
+    }
+  }
+
+  Future<Exams> getExams() async {
+    final response = await http.get("${url}exams");
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      return Exams.fromJson(data);
+    } else {
+      throw Exception('Failed to load exams');
     }
   }
 

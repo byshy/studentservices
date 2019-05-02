@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studentservices/DataBase.dart';
 
-class Subjects extends StatefulWidget {
+class SubjectsRoute extends StatefulWidget {
   @override
-  _SubjectsState createState() => _SubjectsState();
+  _SubjectsRouteState createState() => _SubjectsRouteState();
 }
 
-class _SubjectsState extends State<Subjects> {
+class _SubjectsRouteState extends State<SubjectsRoute> {
   final dbHelper = DatabaseHelper.instance;
 
   @override

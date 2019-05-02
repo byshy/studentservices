@@ -113,7 +113,6 @@ class _MarksRouteState extends State<MarksRoute> {
             }
 
             return _buildMarksItems();
-
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
@@ -142,8 +141,8 @@ class _MarksRouteState extends State<MarksRoute> {
                   elevation: 2.0,
                   child: InkWell(
                     onTap: () {
-                      Route subjects =
-                          MaterialPageRoute(builder: (context) => Subjects());
+                      Route subjects = MaterialPageRoute(
+                          builder: (context) => SubjectsRoute());
                       Navigator.of(context).push(subjects);
                     },
                     child: Padding(
@@ -213,8 +212,8 @@ class _MarksRouteState extends State<MarksRoute> {
     });
   }
 
-  Future<int> _insertMarks(int id,
-      String year, int semester, double gpa, double cGpa) async {
+  Future<int> _insertMarks(
+      int id, String year, int semester, double gpa, double cGpa) async {
     Map<String, dynamic> row = {
       DatabaseHelper.marksIDColumn: id,
       DatabaseHelper.marksYearColumn: year,

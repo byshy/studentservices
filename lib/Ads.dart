@@ -27,12 +27,12 @@ class AdsList {
   }
 } //PODO
 
-class AdsRout extends StatefulWidget {
+class AdsRoute extends StatefulWidget {
   @override
-  _AdsRoutState createState() => _AdsRoutState();
+  _AdsRouteState createState() => _AdsRouteState();
 }
 
-class _AdsRoutState extends State<AdsRout> {
+class _AdsRouteState extends State<AdsRoute> {
   final dbHelper = DatabaseHelper.instance;
   bool connectionStatus = false;
 

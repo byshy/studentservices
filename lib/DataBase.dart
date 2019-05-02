@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper {
   static final String _databaseName = "StudentServices.db";
-  static final int _databaseVersion = 9;
+  static final int _databaseVersion = 11;
 
   static final adsTable = 'ads_table';
   static final agendaTable = 'agenda_table';
@@ -16,6 +16,7 @@ class DatabaseHelper {
   static final scheduleTable = 'schedule_table';
   static final studentTable = 'student_table';
   static final academicalTable = 'academical_table';
+  static final examsTable = 'exams_table';
 
   static final adsIDColumn = 'ads_table_id';
   static final adsAddressColumn = 'ads_table_address';
@@ -35,7 +36,6 @@ class DatabaseHelper {
   static final marksGPAColumn = 'marks_table_gpa';
   static final marksCGPAColumn = 'marks_table_cgpa';
 
-//  static final subjectsIDColumn = 'subjects_table_id';
   static final subjectsMarksIDColumn = 'subjects_table_marks_id';
   static final subjectsNameColumn = 'subjects_table_name';
   static final subjectsCodeColumn = 'subjects_table_code';
@@ -65,6 +65,11 @@ class DatabaseHelper {
   static final academicalStudyHrsColumn = 'academical_table_study_hrs';
   static final academicalRemainingHrsColumn = 'academical_table_remaining_hrs';
   static final academicalBalanceColumn = 'academical_table_balance';
+
+  static final examsSubjectIDColumn = 'exams_table_subject';
+  static final examsDateColumn = 'exams_table_date';
+  static final examsTimeColumn = 'exams_table_time';
+  static final examsIsFinalColumn = 'exams_table_is_final';
 
   DatabaseHelper._privateConstructor();
 
@@ -149,6 +154,13 @@ class DatabaseHelper {
             $academicalStudyHrsColumn INTEGER NOT NULL,
             $academicalRemainingHrsColumn INTEGER NOT NULL,
             $academicalBalanceColumn REAL NOT NULL
+          );''');
+    await db.execute('''
+          CREATE TABLE $examsTable (
+            $examsSubjectIDColumn TEXT NOT NULL,
+            $examsDateColumn TEXT NOT NULL,
+            $examsTimeColumn TEXT NOT NULL,
+            $examsIsFinalColumn INTEGER NOT NULL
           );''');
   }
 
@@ -298,4 +310,26 @@ class DatabaseHelper {
     return Sqflite.firstIntValue(
         await db.rawQuery('SELECT COUNT(*) FROM $academicalTable'));
   }
+
+  Future<int> insertExams(Map<String, dynamic> row) async {
+    Database db = await database;
+    return await db.insert(examsTable, row);
+  }
+
+  Future<List<Map<String, dynamic>>> queryAllExamsRows() async {
+    Database db = await database;
+    return await db.query(examsTable);
+  }
+
+  Future<int> deleteAllExams() async {
+    Database db = await database;
+    return await db.rawDelete("DELETE FROM $examsTable");
+  }
+
+  Future<int> queryExamsRowCount() async {
+    Database db = await database;
+    return Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $examsTable'));
+  }
+
 }

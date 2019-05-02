@@ -70,12 +70,12 @@ class AcademicalInfo {
   }
 } //PODO
 
-class StudentListItem extends StatefulWidget {
+class StudentRoute extends StatefulWidget {
   @override
-  _StudentListItemState createState() => _StudentListItemState();
+  _StudentRouteState createState() => _StudentRouteState();
 }
 
-class _StudentListItemState extends State<StudentListItem> {
+class _StudentRouteState extends State<StudentRoute> {
   StudentInfo student;
   AcademicalInfo info;
   final dbHelper = DatabaseHelper.instance;
@@ -134,18 +134,7 @@ class _StudentListItemState extends State<StudentListItem> {
               )
             ],
           ),
-        )
-//      Padding(
-//        padding:
-//            const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0, bottom: 0.0),
-//        child: Column(
-//          children: <Widget>[
-//            getStudentInfoInterface(),
-//            getAcademicalInfoInterface()
-//          ],
-//        ),
-//      ),
-        );
+        ));
   }
 
   Widget getStudentInfoInterface() {
@@ -205,9 +194,7 @@ class _StudentListItemState extends State<StudentListItem> {
                 Row(
                   children: <Widget>[
                     Expanded(child: Text("Std. ID.", style: style)),
-                    Expanded(
-                        child: Text(item.row[0].toString(),
-                            style: style))
+                    Expanded(child: Text(item.row[0].toString(), style: style))
                   ],
                 ),
                 Divider(),
@@ -330,24 +317,21 @@ class _StudentListItemState extends State<StudentListItem> {
                 Row(
                   children: <Widget>[
                     Expanded(child: Text("Success Hours", style: style)),
-                    Expanded(
-                        child: Text(item.row[5].toString(), style: style))
+                    Expanded(child: Text(item.row[5].toString(), style: style))
                   ],
                 ),
                 Divider(),
                 Row(
                   children: <Widget>[
                     Expanded(child: Text("Study Hours", style: style)),
-                    Expanded(
-                        child: Text(item.row[6].toString(), style: style))
+                    Expanded(child: Text(item.row[6].toString(), style: style))
                   ],
                 ),
                 Divider(),
                 Row(
                   children: <Widget>[
                     Expanded(child: Text("Remaining Hours", style: style)),
-                    Expanded(
-                        child: Text(item.row[7].toString(), style: style))
+                    Expanded(child: Text(item.row[7].toString(), style: style))
                   ],
                 ),
                 Divider(),
